@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        AWS_ACCOUNT_ID = "339713106190" // This will be dynamic in a real enterprise setup
+        AWS_ACCOUNT_ID = "551289997936" // Updated to match user's actual account
         AWS_REGION     = "ap-south-1"
         ECR_REPO_NAME  = "ey-enterprise-repo"
         SCAN_TOKEN     = credentials('sonarqube-token') // We will create this next
