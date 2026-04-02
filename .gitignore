@@ -1,0 +1,28 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+.terraform.lock.hcl
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Secrets
+*.pem
+*.key
+terraform/jenkins_key
+terraform/jenkins_key.pub
+
+# Temp scripts
+repair_jenkins.sh

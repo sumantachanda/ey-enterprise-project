@@ -1,0 +1,90 @@
+---
+- name: Install CI/CD Tools (Jenkins & SonarQube)
+  hosts: jenkins_server
+  become: yes  # Run as sudo
+  tasks:
+    - name: Create 4GB Swap File (Virtual RAM)
+      shell: |
+        fallocate -l 4G /swapfile
+        chmod 600 /swapfile
+        mkswap /swapfile
+        swapon /swapfile
+        echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab
+      args:
+        creates: /swapfile
+
+    - name: Update all packages
+      dnf:
+        name: "*"
+        state: latest
+
+    - name: Install Docker
+      dnf:
+        name: docker
+        state: present
+
+    - name: Start and enable Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add ec2-user to docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
+    - name: Install Docker-Compose
+      get_url:
+        url: https://github.com/docker/compose/releases/latest/download/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    - name: Create a directory for tools
+      file:
+        path: /home/ec2-user/tools
+        state: directory
+        owner: ec2-user
+        group: ec2-user
+
+    - name: Copy Jenkins configuration folder
+      copy:
+        src: ../jenkins
+        dest: /home/ec2-user/tools/
+        owner: ec2-user
+        group: ec2-user
+
+    - name: Copy docker-compose file for Jenkins/SonarQube
+      copy:
+        dest: /home/ec2-user/tools/docker-compose.yml
+        content: |
+          version: '3.8'
+          services:
+            jenkins:
+              image: jenkins/jenkins:lts
+              container_name: jenkins
+              ports:
+                - "8080:8080"
+              volumes:
+                - jenkins_data:/var/jenkins_home
+            sonarqube:
+              image: sonarqube:community
+              container_name: sonarqube
+              ports:
+                - "9000:9000"
+              volumes:
+                - sonarqube_data:/opt/sonarqube/data
+
+          volumes:
+            jenkins_data:
+            sonarqube_data:
+
+    - name: Stop and Cleanup existing tools
+      shell: /usr/local/bin/docker-compose -f /home/ec2-user/tools/docker-compose.yml down
+      ignore_errors: yes
+
+    - name: Start Jenkins and SonarQube (Forced Rebuild)
+      shell: /usr/local/bin/docker-compose up -d --build
+      args:
+        chdir: /home/ec2-user/tools
