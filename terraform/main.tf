@@ -85,3 +85,8 @@ module "jenkins" {
   public_subnet_id     = module.vpc.public_subnet_id
   iam_instance_profile = aws_iam_instance_profile.jenkins_profile.name
 }
+
+module "eks" {
+  source     = "./modules/eks"
+  subnet_ids = module.vpc.public_subnet_ids
+}
