@@ -19,9 +19,13 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
+                    def scannerHome = tool 'sonar-scanner'
                     withSonarQubeEnv('SonarQube-Server') {
-                        sh "echo 'Scanning code...'"
-                        // Placeholder for actual scanner command if needed
+                        sh "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=ey-enterprise-app \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://sonarqube:9000 \
+                            -Dsonar.login=${SCAN_TOKEN}"
                     }
                 }
             }
