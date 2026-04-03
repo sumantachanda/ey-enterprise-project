@@ -1,8 +1,8 @@
 # S3 Bucket for Terraform State
 resource "aws_s3_bucket" "terraform_state" {
   provider = aws.us_east_1
-  bucket = "${var.project_name}-tf-state-${random_id.id.hex}"
-  
+  bucket   = "${var.project_name}-tf-state-${random_id.id.hex}"
+
   # Prevent accidental deletion
   lifecycle {
     prevent_destroy = true
@@ -11,7 +11,7 @@ resource "aws_s3_bucket" "terraform_state" {
 
 resource "aws_s3_bucket_versioning" "enabled" {
   provider = aws.us_east_1
-  bucket = aws_s3_bucket.terraform_state.id
+  bucket   = aws_s3_bucket.terraform_state.id
   versioning_configuration {
     status = "Enabled"
   }

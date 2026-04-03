@@ -12,7 +12,7 @@ data "aws_ami" "latest_al2023" {
 # The "Lock" on the AWS side
 resource "aws_key_pair" "jenkins_key" {
   key_name   = "jenkins-key"
-  public_key = file("${path.root}/jenkins_key.pub") 
+  public_key = file("${path.root}/jenkins_key.pub")
 }
 
 # Security Group (The Firewall)
@@ -56,12 +56,12 @@ resource "aws_security_group" "jenkins_sg" {
 
 # The EC2 Instance
 resource "aws_instance" "jenkins_server" {
-  ami           = data.aws_ami.latest_al2023.id # Use the ID from the auto-finder!
-  instance_type = "t3.micro"
-  subnet_id     = var.public_subnet_id
+  ami                    = data.aws_ami.latest_al2023.id # Use the ID from the auto-finder!
+  instance_type          = "t3.micro"
+  subnet_id              = var.public_subnet_id
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
-  key_name      = aws_key_pair.jenkins_key.key_name
-  iam_instance_profile = var.iam_instance_profile # Attach the IAM Badge!
+  key_name               = aws_key_pair.jenkins_key.key_name
+  iam_instance_profile   = var.iam_instance_profile # Attach the IAM Badge!
 
   root_block_device {
     volume_size = 20

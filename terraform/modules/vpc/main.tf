@@ -5,7 +5,7 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
 
   tags = {
-    Name                                           = "ey-enterprise-vpc"
+    Name                                          = "ey-enterprise-vpc"
     "kubernetes.io/cluster/ey-enterprise-cluster" = "shared"
   }
 }
@@ -18,9 +18,9 @@ resource "aws_subnet" "public" {
   availability_zone       = "${var.region}a"
 
   tags = {
-    Name                                           = "ey-public-subnet"
+    Name                                          = "ey-public-subnet"
     "kubernetes.io/cluster/ey-enterprise-cluster" = "shared"
-    "kubernetes.io/role/elb"                       = "1"
+    "kubernetes.io/role/elb"                      = "1"
   }
 }
 
@@ -31,9 +31,9 @@ resource "aws_subnet" "private_1" {
   availability_zone = "${var.region}a"
 
   tags = {
-    Name                                           = "ey-private-subnet-1"
+    Name                                          = "ey-private-subnet-1"
     "kubernetes.io/cluster/ey-enterprise-cluster" = "shared"
-    "kubernetes.io/role/internal-elb"              = "1"
+    "kubernetes.io/role/internal-elb"             = "1"
   }
 }
 
@@ -44,9 +44,9 @@ resource "aws_subnet" "private_2" {
   availability_zone = "${var.region}b"
 
   tags = {
-    Name                                           = "ey-private-subnet-2"
+    Name                                          = "ey-private-subnet-2"
     "kubernetes.io/cluster/ey-enterprise-cluster" = "shared"
-    "kubernetes.io/role/internal-elb"              = "1"
+    "kubernetes.io/role/internal-elb"             = "1"
   }
 }
 
@@ -67,9 +67,9 @@ resource "aws_subnet" "public_2" {
   availability_zone       = "${var.region}b"
 
   tags = {
-    Name                                           = "ey-public-subnet-2"
+    Name                                          = "ey-public-subnet-2"
     "kubernetes.io/cluster/ey-enterprise-cluster" = "shared"
-    "kubernetes.io/role/elb"                       = "1"
+    "kubernetes.io/role/elb"                      = "1"
   }
 }
 
